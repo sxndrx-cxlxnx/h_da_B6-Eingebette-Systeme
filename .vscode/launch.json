@@ -1,0 +1,29 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/main.elf",
+            "cwd": "${workspaceFolder}",
+            "svdPath": "${workspaceFolder}/CMSIS/ATSAM3X8E.svd",
+            "unknownBreakpointHandling": "stop",
+            "MIMode": "gdb",
+            "miDebuggerPath": "arm-none-eabi-gdb",
+            "miDebuggerServerAddress": "localhost:3333",
+            "useExtendedRemote": true,
+            "postRemoteConnectCommands": [
+                {
+                    "text": "monitor reset init"
+                },
+                {
+                    "text": "load"
+                }
+            ],
+            "internalConsoleOptions": "neverOpen",
+            "preLaunchTask": "make"
+        }
+    ],
+    "compounds": []
+}

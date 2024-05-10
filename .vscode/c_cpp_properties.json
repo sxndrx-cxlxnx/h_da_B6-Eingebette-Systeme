@@ -1,0 +1,17 @@
+{
+    "configurations": [
+        {
+            "name": "Arduino Due",
+            "includePath": [
+                "${workspaceFolder}/cmsis/src/",
+                "${workspaceFolder}/include/",
+            ],
+            "defines": [],
+            "compilerPath": "/usr/bin/arm-none-eabi-gcc",
+            "cStandard": "c11",
+            "intelliSenseMode": "gcc-arm",
+            "compilerArgs": []
+        }
+    ],
+    "version": 4
+}

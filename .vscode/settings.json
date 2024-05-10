@@ -1,0 +1,24 @@
+{
+    "C_Cpp.doxygen.generatedStyle": "/*!",
+    "C_Cpp.autoAddFileAssociations": false,
+    "debug.allowBreakpointsEverywhere": true,
+    "files.exclude": {
+        "build": true,
+        "**/*.d": true,
+        "**/*.o": true,
+        "**/*.elf": true
+    },
+    "C_Cpp.doxygen.sectionTags": [
+        "details",
+        "attention",
+        "tparam",
+        "param",
+        "result",
+        "returns",
+        "retval",
+        "exception",
+        "deprecated",
+        "warning",
+        "note"
+    ]
+}
