@@ -44,4 +44,7 @@ void twi_init(Twi *const twi, const uint32_t freq, const bool slave)
 
 void twi_write(Twi *const twi, const uint32_t address, const uint8_t *const ptr, const uint32_t size)
 {
+    // MMR, SR und THR
+    // oder DMA-Controller via TPR und TCR
+    // LED-Matrix-Adresse 0x70 - 0x77
 }

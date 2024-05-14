@@ -15,47 +15,54 @@
 #define DUE_LED_BUILTIN PIO_PB27
 
 //0x400E + 0x1000 --> Power Management PIOB?
-//PER --> PIO Enable Register 0x00 (Offset)
-//OER --> Output Enable Register 0x10 (Offset)
-
-#define PIOB_PER ((volatile unsigned int *) 0x400E1000)
+#define PIOB_PER ((volatile unsigned int *) 0x400E1000) // PIO Enable Register 0x00 (Offset)
+#define PIOB_OER ((volatile unsigned int *) 0x400E1010) // Output Enable Register 0x10 (Offset)
 
 #define PIOD_PER ((volatile unsigned int *) 0x400E1400)
 #define PIOD_ODR ((volatile unsigned int *) 0x400E1414)
 #define PIOD_PDSR ((volatile unsigned int *) 0x400E143C)
 
-#define PMC_PCER0 ((volatile unsigned int *) 0x400E0610) //PIOB an Register 12 --> 0x1000
+#define PMC_PCER0 ((volatile unsigned int *) 0x400E0610) // PIOB an Register 12 --> 0x1000
 #define PMC_PCER1 ((volatile unsigned int *) 0x400E0700)
 
-#define PIOB_ODSR ((volatile unsigned int *) 0x400E1038) //PIO Output Data Status Register für PIOB
-#define PIOB_SODR ((volatile unsigned int *) 0x400E1030) //PIO Set Output Data Register für PIOB
-#define PIOB_CODR ((volatile unsigned int *) 0x400E1034) //PIO Clear Output Data Register für PIOB
+#define PIOB_ODSR ((volatile unsigned int *) 0x400E1038) // PIO Output Data Status Register für PIOB
+#define PIOB_SODR ((volatile unsigned int *) 0x400E1030) // PIO Set Output Data Register für PIOB
+#define PIOB_CODR ((volatile unsigned int *) 0x400E1034) // PIO Clear Output Data Register für PIOB
 
 unsigned int adr_PIOB_OER = 0x400E1010;
-unsigned int led = 0x08000000;
+unsigned int led = 1 << 27; // 0x08000000;
+
 
 // return state of LED
-bool led_get(void) { 								//TODO: funktioniert das so?
+bool led_get(void)
+{ 
 	unsigned int status = *PIOB_ODSR;
-	if(status & led == led){
+	unsigned int res = status & led;
+	if(res == led)
+	{
 		return true;
 	}
+
 	return false; 
 }
 
 // turn on/off LED
-void led_set(bool led_on) {							//TODO: funktioniert das so?
-
-	if(led_on){
+void led_set(bool led_on) 
+{
+	if(led_on)
+	{
 		*PIOB_SODR = led;				
-	}else{
+	}
+	else
+	{
 		*PIOB_CODR = led;
 	}
-
 }
 
-// toogle LED
-static void led_toggle(void) {}
+// toggle LED
+static void led_toggle(void) {
+	led_set(!led_get());
+}
 
 // LED is toggling after a number of calls
 static void led_blinking(void)
@@ -72,63 +79,56 @@ static void led_blinking(void)
 }
 
 // initial config for using LED
-void led_init(void) {
-	*PMC_PCER0 = 0x1000; //Peripheral Clock für PIOB einschalten (Bit 12) (?)
-	*PMC_PCER0 = 0x5000; //Peripheral Clock für PIOD einschalten (Bit 14) (?)
-	*PIOB_PER = led; //idealerweise die LED aktivieren (Bit 27)
+void led_init(void)
+{
+	//unsigned int piobd = 0x1000 | 0x5000;
+	//*PMC_PCER0 = 0x1000; 		// Peripheral Clock für PIOB einschalten (Bit 12) (?)
+	*PMC_PCER0 = 0x5000; 		// Peripheral Clock für PIOB & PIOD einschalten (Bit 14) (?)
+	*PIOB_PER = led; 			// LED aktivieren (Bit 27)
+	*PIOB_OER = led;			// LED Output aktivieren
 
-	*PIOD_ODR = 0x7; //idealerweise Tasten 1-3 aktivieren (PIOD0-2)
-
+	*PIOD_PER = 0x7;
+	*PIOD_ODR = 0x7; 			// idealerweise Tasten 1-3 aktivieren (PIOD0-2)
 }
 
 // loop for LED control - blinking when EDA code is running
 void led_loop(void)
-{/*											//TODO: Soll das so?
+{
 	unsigned int status = *PIOD_PDSR;
 	int taste = -1;
 
-	if (status & 0x1 == 0x1){
-		taste = 0;
-	} else if (status & 0x2 == 0x2){
-		taste = 1;
-	} else if (status & 0x4 == 0x4){
+	if ((status | 0xFFFFFFFB) == 0xFFFFFFFB){
 		taste = 2;
+	} else if ((status | 0xFFFFFFFD) == 0xFFFFFFFD){
+		taste = 1;
+	} else if ((status | 0xFFFFFFFE) == 0xFFFFFFFE){
+		taste = 0;
 	}
 
 	if (state.led == LED_NOLOOP)
+	{
 		return;
+	}
 
 	switch (taste)	{
 	case 0:
 		led_blinking();
+		state.led = LED_BLINKING;
 		break;
 	case 1:
 		led_set(true);
+		state.led = LED_ON;
 		break;
 	case 2:
 		led_set(false);
+		state.led = LED_OFF;
 		break;
 	default:
 		break;
 	}
-*/
-
-	if (state.led == LED_NOLOOP)
-		return;
-
-	switch (state.led)
+	
+	if (state.led == LED_BLINKING)
 	{
-	case LED_BLINKING:
 		led_blinking();
-		break;
-	case LED_ON:
-		led_set(true);
-		break;
-	case LED_OFF:
-		led_set(false);
-		break;
-	case LED_NOLOOP:
-	default:
-		break;
 	}
 }

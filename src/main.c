@@ -4,17 +4,33 @@
 // AUTHORS: 
 // FILE: matrix.c
 // CONTENTS: main loop 
-
 #include <serial.h>
 #include <menu.h>
 #include <clock.h>
+#include <led.h>
+#include <twi.h>
+#include <matrix.h>
 
 void init(void)
 {
+    led_init();
+    serial_init();
+    menu_init();
+    clock_init();
+    //twi_init();
+    //matrix_init();
 }
 
 void loop(void)
 {
+    menu_loop();
+    clock_loop();
+    serial_loop();
+    led_loop();
+    
+    //char *const string = "";
+    //serial_transmit_string("Hallo\\n", 7);
+    
 }
 
 int main(void)
