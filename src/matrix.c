@@ -109,5 +109,5 @@ void matrix_init(void)
 // loop for regular tasks related to LED matrix
 void matrix_loop(void)
 {
-    //matrix_update();
+    matrix_update();
 }

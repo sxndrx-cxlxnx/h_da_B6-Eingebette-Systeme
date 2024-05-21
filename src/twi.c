@@ -45,6 +45,28 @@ void twi_init(Twi *const twi, const uint32_t freq, const bool slave)
 void twi_write(Twi *const twi, const uint32_t address, const uint8_t *const ptr, const uint32_t size)
 {
     // MMR, SR und THR
-    // oder DMA-Controller via TPR und TCR
+    // (oder DMA-Controller via TPR und TCR)
     // LED-Matrix-Adresse 0x70 - 0x77
+
+    // set the Master Mode Register
+    twi->TWI_MMR = address; // | 0x00001000; // das wäre lesen (Transfer Bit direction)
+                            // & 0xFFFFEFFF; // das wäre schreiben
+    // internal address extension size not needed -> only 7 Bit
+
+    twi->TWI_THR = ptr;
+    int bitsLeft = size - 8;
+
+    while(bitsLeft > 0) // while data to send
+    {
+        if((twi->TWI_SR_TXRDY) != 1)
+        {
+            continue;
+        }
+        twi->TWI_THR = ptr + 0x8;
+        bitsLeft -= 8;
+    }
+    
+    twi->TWI_CR = (twi->TWI_CR | 0x2);
+
+    while(twi->TWI_SR_TXCOMP != 1){}
 }
