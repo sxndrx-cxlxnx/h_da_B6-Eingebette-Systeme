@@ -15,10 +15,10 @@ void init(void)
 {
     led_init();
     serial_init();
+    twi_init(TWI1, 100, false);
+    matrix_init();
     menu_init();
     clock_init();
-    //twi_init();
-    //matrix_init();
 }
 
 void loop(void)
@@ -27,6 +27,7 @@ void loop(void)
     clock_loop();
     serial_loop();
     led_loop();
+    matrix_loop();
     
     //char *const string = "";
     //serial_transmit_string("Hallo\\n", 7);

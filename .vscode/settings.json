@@ -20,5 +20,6 @@
         "deprecated",
         "warning",
         "note"
-    ]
+    ],
+    "task.allowAutomaticTasks": "on"
 }

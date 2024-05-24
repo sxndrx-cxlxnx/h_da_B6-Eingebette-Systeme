@@ -109,5 +109,90 @@ void matrix_init(void)
 // loop for regular tasks related to LED matrix
 void matrix_loop(void)
 {
-    matrix_update();
+    const uint8_t kreuz[8] = {
+        0x81, 0x42, 0x24, 0x18, 0x18, 0x24, 0x42, 0x81
+    };
+    const uint8_t dot[8] = {
+        0x00, 0x00, 0x00, 0x18, 0x18, 0x00, 0x00, 0x00
+    };
+    const uint8_t circleSmall[8] = {
+        0x00, 0x00, 0x18, 0x24, 0x24, 0x18, 0x00, 0x00
+    };
+    const uint8_t circleMedium[8] = {
+        0x00, 0x3C, 0x42, 0x42, 0x42, 0x42, 0x3C, 0x00
+    };
+    const uint8_t circleBig[8] = {
+        0x3C, 0x42, 0x81, 0x81, 0x81, 0x81, 0x42, 0x3C
+    };
+    //matrix_update(TWI1, circleBig);
+
+    static int pic = 0;
+    switch (pic){
+        case 0:
+        case 1:
+        case 2: matrix_update(TWI1, dot);
+                pic++;
+                break;
+        case 3:
+        case 4:
+        case 5: matrix_update(TWI1, circleSmall);
+                pic++;
+                break;
+        case 6:
+        case 7:
+        case 8: matrix_update(TWI1, circleMedium);
+                pic++;
+                break;
+        case 9:
+        case 10:
+        case 11: matrix_update(TWI1, circleBig);
+                pic++;
+                break;
+        case 12:
+        case 13:
+        case 14: matrix_update(TWI1, circleMedium);
+                pic++;
+                break;
+        case 15:
+        case 16:
+        case 17: matrix_update(TWI1, circleSmall);
+                pic = 0;
+                break;
+        default: matrix_update(TWI1, kreuz);
+    }
+
+    /*
+    static int pic = 0;
+    switch (pic){
+        case 0 ... 7:
+            matrix_update(TWI1, dot);
+            pic++;
+            break;
+        case 8 ... 15:
+                matrix_update(TWI1, circleSmall);
+                pic++;
+                break;
+        case 16 ... 23:
+                matrix_update(TWI1, circleMedium);
+                pic++;
+                break;
+        case 24 ... 31:
+                matrix_update(TWI1, circleBig);
+                pic++;
+                break;
+        case 32 ... 39:
+                matrix_update(TWI1, circleMedium);
+                pic++;
+                break;
+        case 40 ... 46:
+                matrix_update(TWI1, circleSmall);
+                pic++;
+                break;
+        case 47:
+                matrix_update(TWI1, circleSmall);
+                pic = 0;
+                break;
+        default: matrix_update(TWI1, kreuz);
+    }
+    */
 }

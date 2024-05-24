@@ -49,24 +49,21 @@ void twi_write(Twi *const twi, const uint32_t address, const uint8_t *const ptr,
     // LED-Matrix-Adresse 0x70 - 0x77
 
     // set the Master Mode Register
-    twi->TWI_MMR = address; // | 0x00001000; // das wäre lesen (Transfer Bit direction)
-                            // & 0xFFFFEFFF; // das wäre schreiben
+    twi->TWI_MMR = address << 16 | twi->TWI_MMR;   // set slave address
+    // | 0x00001000; // das wäre lesen (Transfer Bit direction)
+    // & 0xFFFFEFFF; // das wäre schreiben
     // internal address extension size not needed -> only 7 Bit
 
-    twi->TWI_THR = ptr;
-    int bitsLeft = size - 8;
+    twi->TWI_THR = *ptr;
 
-    while(bitsLeft > 0) // while data to send
+    for (int i = 0; i < size; i++)
     {
-        if((twi->TWI_SR_TXRDY) != 1)
-        {
-            continue;
-        }
-        twi->TWI_THR = ptr + 0x8;
-        bitsLeft -= 8;
-    }
-    
-    twi->TWI_CR = (twi->TWI_CR | 0x2);
+        twi->TWI_THR = ptr[i]; // send data to slave
 
-    while(twi->TWI_SR_TXCOMP != 1){}
+        while (!(twi->TWI_SR & TWI_SR_TXRDY)){}
+    }    
+    
+    twi->TWI_CR = (twi->TWI_CR | 0x2);  // Stop Bit
+
+    while(!(twi->TWI_SR & TWI_SR_TXCOMP)){}
 }
