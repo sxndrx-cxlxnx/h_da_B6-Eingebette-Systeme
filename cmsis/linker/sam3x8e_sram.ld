@@ -45,8 +45,9 @@ MEMORY
 /* The stack size used by the application. NOTE: you need to adjust according to your application. */
 STACK_SIZE = DEFINED(STACK_SIZE) ? STACK_SIZE : 0x400;
 
+/* Defining the heap explicit is no longer needed, it has always the maximum possible size. */
 /* The heapsize used by the application. NOTE: you need to adjust according to your application. */
-HEAP_SIZE = DEFINED(HEAP_SIZE) ? HEAP_SIZE : 0x200;
+/* HEAP_SIZE = DEFINED(HEAP_SIZE) ? HEAP_SIZE : 0x400; */
 
 /* Section Definitions */
 SECTIONS
@@ -136,9 +137,20 @@ SECTIONS
         _ebss = . ;
         _ezero = .;
         __bss_end__ = .;
+        _end = . ;
     } > ram
 
-    /* stack section */
+    /* heap section */
+    .heap (NOLOAD):
+    {
+        . = ALIGN(8);
+         _sheap = .;
+        . = ORIGIN(ram) + LENGTH(ram) - STACK_SIZE; /* max heap */
+        . = ALIGN(8);
+        _eheap = .;
+    } > ram
+
+     /* stack section */
     .stack (NOLOAD):
     {
         . = ALIGN(8);
@@ -148,17 +160,6 @@ SECTIONS
         _estack = .;
     } > ram
 
-    /* heap section */
-    .heap (NOLOAD):
-    {
-        . = ALIGN(8);
-         _sheap = .;
-        . = . + HEAP_SIZE;
-        . = ALIGN(8);
-        _eheap = .;
-    } > ram
-
     . = ALIGN(4);
-    _end = . ;
     _ram_end_ = ORIGIN(ram) + LENGTH(ram) -1 ;
 }

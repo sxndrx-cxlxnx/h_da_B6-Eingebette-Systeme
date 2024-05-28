@@ -10,6 +10,7 @@
 #include <led.h>
 #include <twi.h>
 #include <matrix.h>
+#include <sonic.h>
 
 void init(void)
 {
@@ -28,6 +29,7 @@ void loop(void)
     serial_loop();
     led_loop();
     matrix_loop();
+    //sonic_init();
     
     //char *const string = "";
     //serial_transmit_string("Hallo\\n", 7);

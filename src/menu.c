@@ -294,27 +294,17 @@ static void menu_switch_state(char selection)
 // print an update on terminal on a regular base
 static void menu_print_update(void )
 {
-    static uint32_t tick_update = 0;
-    const uint32_t  interval    = CLOCK_TICKS_PER_SECOND / MENU_UPDATE_FREQUENCY;
+    // print new values
+    menu_print_value();
 
-    // if last update is back more than an interval
-    if ( tick_update + interval < clock_get_loop_tick() )
+    //
+    if ( state.debug == DEBUG_RAW_DATA )
     {
-        // print new values
-        menu_print_value();
-
-        //
-        if ( state.debug == DEBUG_RAW_DATA )
-        {
-            menu_print_debug();
-        }
-
-        // leave cursor in the top left corner
-        menu_cursor(ROW_UNIT, 1);
-
-        // update values at current looptick
-        tick_update = clock_get_loop_tick();
+        menu_print_debug();
     }
+
+    // leave cursor in the top left corner
+    menu_cursor(ROW_UNIT, 1);
 }
 
 // initialization steps for menu - print menu on screen
@@ -336,6 +326,16 @@ void menu_loop(void)
     {
         menu_switch_state(selection);
     }
-    menu_print_state();
-    menu_print_update();
+
+    static uint32_t tick_update = 0;
+    const uint32_t  interval    = CLOCK_TICKS_PER_SECOND / MENU_UPDATE_FREQUENCY;
+
+    // if last update is back more than an interval
+    if ( tick_update + interval < clock_get_loop_tick() ) {
+        menu_print_state();
+        menu_print_update();
+
+        // update values at current looptick
+        tick_update = clock_get_loop_tick();
+    }
 }

@@ -3,7 +3,7 @@ CC = arm-none-eabi-gcc
 CFLAGS = -mcpu=cortex-m3    \
 		 -Wall			    \
 		 -Wpedantic         \
-		 -Werror            \
+		 -Wno-error            \
 		 -L cmsis/linker    \
 		 -T sam3x8e_sram.ld \
 		 -D __SAM3X8E__     \
@@ -17,7 +17,7 @@ LDLIBS = -lm
  
 SOURCES = cmsis/src/startup.c \
           cmsis/src/system.c  \
-          cmsis/src/stubs.c   \
+          cmsis/src/newlib.c   \
           src/clock.c         \
           src/debug.c         \
           src/led.c           \
@@ -38,7 +38,7 @@ OBJS = $(SOURCES:%.c=%.o)
 %.d: %.c Makefile
 	$(CC) $(CFLAGS) -MM -MT $(@:%.d=%.o) -MF $@ $<
  
-%.o: %.c Makefile
+%.o: %.c Makefile cmsis/linker/sam3x8e_sram.ld
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 main.elf: $(OBJS) 

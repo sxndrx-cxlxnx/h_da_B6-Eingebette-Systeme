@@ -6,8 +6,8 @@
 #undef errno
 extern int errno;
 
-_ssize_t _write(int fildes, const void *buf, size_t nbyte) __attribute__((weak, alias("_write_stub")));
-_ssize_t _write_stub(int fildes, const void *buf, size_t nbyte) { return 0; }
+ssize_t _write(int fildes, const void *buf, size_t nbyte) __attribute__((weak, alias("_write_stub")));
+ssize_t _write_stub(int fildes, const void *buf, size_t nbyte) { return 0; }
 
 // Exit a program without cleaning up files. If your system doesn’t provide this, it is best to avoid linking with subroutines that require it (exit, system).
 void _exit(int status)
@@ -89,8 +89,8 @@ int _open(const char *name, int flags, int mode)
 }
 
 // Read from a file. Minimal implementation:
-int _read(int file, char *ptr, int len) __attribute__((weak, alias("_write_stub")));
-int _read_sub(int file, char *ptr, int len)
+ssize_t _read(int fildes, void *buf, size_t nbyte) __attribute__((weak, alias("_write_stub")));
+ssize_t _read_stub(int fildes, void *buf, size_t nbyte)
 {
     return 0;
 }
@@ -99,27 +99,37 @@ int _read_sub(int file, char *ptr, int len)
 // depend on this, it is useful to have a working implementation.
 // The following suffices for a standalone system; it exploits the
 // symbol _end automatically defined by the GNU linker.
-caddr_t _sbrk(int incr)
+void* _sbrk(intptr_t incr)
 {
-    extern char _end; /* Defined by the linker */
-    static char *heap_end;
-    char *prev_heap_end;
-    // TODO: Actually make it save!
-    char *stack_ptr = (char *)-1;
+    // extern char _end; /* Defined by the linker */
+    // static char *heap_end;
+    // char *prev_heap_end;
+    // // TODO: Actually make it save!
+    // char *stack_ptr = (char *)-1;
 
-    if (heap_end == 0)
-    {
-        heap_end = &_end;
-    }
-    prev_heap_end = heap_end;
-    if (heap_end + incr > stack_ptr)
-    {
+    // if (heap_end == 0)
+    // {
+    //     heap_end = &_end;
+    // }
+    // prev_heap_end = heap_end;
+    // if (heap_end + incr > stack_ptr)
+    // {
+    //     _write(1, "Heap and stack collision\n", 25);
+    //     abort();
+    // }
+
+    // heap_end += incr;
+    // return (caddr_t)prev_heap_end;
+
+    extern char _end, _sstack;
+    static char* program_break = &_end;
+    void *const previous_program_break = program_break;
+    program_break += incr;
+    if (program_break >= &_sstack) {
         _write(1, "Heap and stack collision\n", 25);
         abort();
     }
-
-    heap_end += incr;
-    return (caddr_t)prev_heap_end;
+    return previous_program_break;
 }
 
 // Status of a file (by name). Minimal implementation:

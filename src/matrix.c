@@ -110,8 +110,53 @@ void matrix_init(void)
 void matrix_loop(void)
 {
     const uint8_t kreuz[8] = {
-        0x81, 0x42, 0x24, 0x18, 0x18, 0x24, 0x42, 0x81
+        0x00, 0x42, 0x24, 0x18, 0x18, 0x24, 0x42, 0x00
     };
+    const uint8_t antiKreuz[8] = {
+        0xFF, 0xBD, 0xDB, 0xE7, 0xE7, 0xDB, 0xBD, 0xFF
+    };
+    const uint8_t haeckchen[8] = {
+        0x00, 0x00, 0x10, 0x20, 0x10, 0x08, 0x04, 0x00
+    };
+    /* 
+        1   2   3   4   4   3   2   1
+    1
+    2
+    4                           X
+    8                       X
+    1           X       X
+    2               X
+    4               
+    8
+    */
+   const uint8_t creeper[8] = {
+        0xFF, 0xF9, 0x89, 0xC7, 0xC7, 0x89, 0xF9, 0xFF
+    };
+    /*  Creeper
+        1   2   3   4   4   3   2   1
+    1   X   X   X   X   X   X   X   X
+    2   X           X   X           X
+    4   X           X   X           X
+    8   X   X   X           X   X   X
+    1   X   X                   X   X
+    2   X   X                   X   X
+    4   X   X       X   X       X   X
+    8   X   X   X   X   X   X   X   X
+    */
+   const uint8_t dog[8] = {
+        0x00, 0xFF, 0xD7, 0xBC, 0xAC, 0xBC, 0xD7, 0xFF
+    };
+    /*  Dog / Smiley mit Ohren / Robo
+        1   2   3   4   4   3   2   1
+    1       X   X               X   X
+    2       X   X               X   X
+    4       X   X   X   X   X   X   X
+    8       X       X   X   X       X
+    1       X   X   X       X   X   X
+    2       X       X   X   X       X
+    4       X   X               X   X
+    8       X   X   X   X   X   X   X
+    */
     const uint8_t dot[8] = {
         0x00, 0x00, 0x00, 0x18, 0x18, 0x00, 0x00, 0x00
     };
@@ -126,7 +171,15 @@ void matrix_loop(void)
     };
     //matrix_update(TWI1, circleBig);
 
-    static int pic = 0;
+    static int pic = 21;
+    /*
+    0 - Kreis Animation
+    18 - Antipattern
+    19 - Haeckchen
+    20 - Kreuz
+    21 - Creeper
+    22 - Dog
+    */
     switch (pic){
         case 0:
         case 1:
@@ -157,6 +210,16 @@ void matrix_loop(void)
         case 16:
         case 17: matrix_update(TWI1, circleSmall);
                 pic = 0;
+                break;
+        case 18: matrix_update(TWI1, antiKreuz);
+                break;
+        case 19: matrix_update(TWI1, haeckchen);
+                break;
+        case 20: matrix_update(TWI1, kreuz);
+                break;
+        case 21: matrix_update(TWI1, creeper);
+                break;
+        case 22: matrix_update(TWI1, dog);
                 break;
         default: matrix_update(TWI1, kreuz);
     }
