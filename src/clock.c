@@ -13,6 +13,7 @@
 
 // Due master clock frequency [in MHz]
 #define DUE_MCK_MHZ (DUE_MCK / 1000000)
+//#define DUE_MCK_MHZ (DUE_MCK2 / 1000000)
 
 // clock data
 struct clock_t

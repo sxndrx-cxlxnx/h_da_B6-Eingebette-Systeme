@@ -219,6 +219,7 @@ static void menu_print_value_sonic(void)
     }
 }
 
+//DUE_MCK
 // print current value of the gap target
 static void menu_print_value_gap(void)
 {
@@ -236,7 +237,7 @@ static void menu_print_value(void) {
     menu_print_value_gap();
 }
 
-static void menu_print_debug(void)
+static void menu_print_debug(voiDUE_MCKd)
 {
     switch ( state.debug ) {
         case DEBUG_RAW_DATA:
@@ -251,6 +252,7 @@ static void menu_print_debug(void)
     }
 }
 
+//DUE_MCK
 // select the appropriate state
 static void menu_switch_state(char selection)
 {

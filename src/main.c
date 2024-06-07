@@ -11,6 +11,7 @@
 #include <twi.h>
 #include <matrix.h>
 #include <sonic.h>
+#include <sample.h>
 
 void init(void)
 {
@@ -20,6 +21,8 @@ void init(void)
     matrix_init();
     menu_init();
     clock_init();
+    sample_init();
+    sonic_init();
 }
 
 void loop(void)
@@ -29,7 +32,8 @@ void loop(void)
     serial_loop();
     led_loop();
     matrix_loop();
-    //sonic_init();
+    sample_loop();
+    // sonic_loop();
     
     //char *const string = "";
     //serial_transmit_string("Hallo\\n", 7);

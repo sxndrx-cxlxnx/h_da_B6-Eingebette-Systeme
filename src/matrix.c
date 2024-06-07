@@ -109,6 +109,19 @@ void matrix_init(void)
 // loop for regular tasks related to LED matrix
 void matrix_loop(void)
 {
+
+    static int pic = 0;
+    /*
+    0 - Kreis Animation
+    18 - Antipattern
+    19 - Haeckchen
+    20 - Kreuz
+    21 - Creeper
+    22 - Dog
+    */
+
+  
+
     const uint8_t kreuz[8] = {
         0x00, 0x42, 0x24, 0x18, 0x18, 0x24, 0x42, 0x00
     };
@@ -169,18 +182,32 @@ void matrix_loop(void)
     const uint8_t circleBig[8] = {
         0x3C, 0x42, 0x81, 0x81, 0x81, 0x81, 0x42, 0x3C
     };
-    //matrix_update(TWI1, circleBig);
 
-    static int pic = 21;
+     // struct sample_t sample_series_get(const struct sample_series_t *const series, int index)
+   // uint32_t gap_target
     /*
-    0 - Kreis Animation
-    18 - Antipattern
-    19 - Haeckchen
-    20 - Kreuz
-    21 - Creeper
-    22 - Dog
+    struct sample_series_t
+    {
+        int             current;                        // index of the most recently inserted sample
+        struct sample_t sample[SAMPLE_SERIES_SIZE];     // samples organized as a ring buffer in an array
+    };
+    matrix_progress(uint8_t*const buffer, const float progress)
     */
+   
+    float progress = 0;
+
+    if(state.sonic == SONIC_ON){
+        struct sample_t x  = sample_series_get(distance_raw, 0);
+        progress = x.value;
+        pic = 23;
+    }
+    uint8_t buf[8] = {0,0,0,0,0,0,0,0};
+    
     switch (pic){
+        case 23: matrix_progress(buf, progress/1000000);
+                //const uint8_t buffer2 = {buffer};
+                matrix_update(TWI1, buf);
+                break;
         case 0:
         case 1:
         case 2: matrix_update(TWI1, dot);
@@ -221,7 +248,7 @@ void matrix_loop(void)
                 break;
         case 22: matrix_update(TWI1, dog);
                 break;
-        default: matrix_update(TWI1, kreuz);
+        default: break;
     }
 
     /*

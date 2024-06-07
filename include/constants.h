@@ -9,7 +9,7 @@
 #define _CONSTANTS_H_
 
 // Arduino Due uses 84 MHz as masterclock frequency by default
-#define DUE_MCK     84000000
+#define DUE_MCK     (84000000)
 #define DUE_MCK2    (DUE_MCK/2)
 #define DUE_MCK128  (DUE_MCK/128)
 
