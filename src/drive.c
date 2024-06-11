@@ -18,6 +18,8 @@ void drive_duty(const uint32_t freq, const float duty)
 // initialization steps for PWM motor drive
 void drive_init(void)
 {
+    // IN1, IN2, ENA
+    // Ausgabe an PIOC25
 }
 
 // loop for regular tasks related to PWM motor drive

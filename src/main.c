@@ -12,6 +12,7 @@
 #include <matrix.h>
 #include <sonic.h>
 #include <sample.h>
+#include <drive.h>
 
 void init(void)
 {
@@ -23,6 +24,7 @@ void init(void)
     clock_init();
     sample_init();
     sonic_init();
+    drive_init();
 }
 
 void loop(void)
@@ -34,6 +36,7 @@ void loop(void)
     matrix_loop();
     sample_loop();
     // sonic_loop();
+    drive_loop();
     
     //char *const string = "";
     //serial_transmit_string("Hallo\\n", 7);

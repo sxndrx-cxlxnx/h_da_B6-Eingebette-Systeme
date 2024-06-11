@@ -201,12 +201,14 @@ void matrix_loop(void)
         progress = x.value;
         pic = 23;
     }
-    uint8_t buf[8] = {0,0,0,0,0,0,0,0};
+    uint8_t distanceView[8] = {0,0,0,0,0,0,0,0};
+    int anzahlLampen = 64;
+    int abstandStopp = 300;     // in mm
     
     switch (pic){
-        case 23: matrix_progress(buf, progress/1000000);
+        case 23: matrix_progress(distanceView, anzahlLampen / ((progress/1000) - abstandStopp));          //alternativ progress/1000000 50/
                 //const uint8_t buffer2 = {buffer};
-                matrix_update(TWI1, buf);
+                matrix_update(TWI1, distanceView);
                 break;
         case 0:
         case 1:

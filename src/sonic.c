@@ -110,7 +110,7 @@ void init_echo()
     TC2->TC_CHANNEL[2].TC_CCR = TC_CCR_CLKDIS;             // Disable the clock
 
     // NVIC
-    NVIC_EnableIRQ(TC8_IRQn);//
+    NVIC_EnableIRQ(TC8_IRQn);
 
     TC2->TC_CHANNEL[2].TC_CMR =     TC_CMR_LDBSTOP |        // Counter clock is stopped when RB loading occurs
                                     TC_CMR_CPCTRG |         // RC Compare resets the counter and starts the counter clock
@@ -119,7 +119,7 @@ void init_echo()
 
     TC2->TC_CHANNEL[2].TC_RC = -1;                          // use maximum value for register RC
 
-    TC2->TC_CHANNEL[2].TC_IER = TC_IER_LDRBS;    //           // enable interrupt on register RB loaded 
+    TC2->TC_CHANNEL[2].TC_IER = TC_IER_LDRBS;               // enable interrupt on register RB loaded 
 
     TC2->TC_CHANNEL[2].TC_CCR = TC_CCR_CLKEN | TC_CCR_SWTRG;// Reset the counter and start the clock
 }
