@@ -13,6 +13,7 @@
 #include <sonic.h>
 #include <sample.h>
 #include <drive.h>
+#include <motion.h>
 
 void init(void)
 {
@@ -33,10 +34,11 @@ void loop(void)
     clock_loop();
     serial_loop();
     led_loop();
+    //motion_loop();
     matrix_loop();
     sample_loop();
-    // sonic_loop();
     drive_loop();
+    // sonic_loop();
     
     //char *const string = "";
     //serial_transmit_string("Hallo\\n", 7);
