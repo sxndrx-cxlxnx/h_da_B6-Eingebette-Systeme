@@ -60,31 +60,41 @@ void drive_loop(void)
     struct sample_t older_sample = sample_series_get(distance_raw, 1);
 
     float wt = gap_target;
-    float st = current_sample.value / 1000.;
-    float et = wt - st;
+    float st2 = current_sample.value / 1000.;
+    float st1 = older_sample.value / 1000.;
+    float et2 = wt - st2;
+    float et1 = wt - st1;
 
-    float zeit = 0;
-    float vt = older_sample;         // Geschwindigkeit
+
+    // Verstärkung
+    float KP = 1.; // 0.01;
+    float KD = 1.; // 0.1;
+
+    float zeit = 0.00002;
+    float vt = ((et1 - et2))/1;         // Geschwindigkeit
+    float ut = KP * et2 + KD * vt;
     
-    if (current_sample.value / 1000. > gap_target) {
+    if (ut < 0) {
 
-        PIOC->PIO_SODR = PIO_PC23B_PWML6;
-        PIOC->PIO_CODR = PIO_PC24B_PWML7;
-
-        duty_cycle = 25.f;
-
-    } else if (current_sample.value / 1000. < gap_target){
-
+        //Rückwärts
         PIOC->PIO_SODR = PIO_PC24B_PWML7;
         PIOC->PIO_CODR = PIO_PC23B_PWML6;
 
-        duty_cycle = 25.f;
+        duty_cycle = -1 * ut;
+
+    } else if (ut > 0){        
+
+        //Vorwärts
+        PIOC->PIO_SODR = PIO_PC23B_PWML6;
+        PIOC->PIO_CODR = PIO_PC24B_PWML7;
+
+        duty_cycle = ut;
         
     } else {
         duty_cycle = 0.f;
     }
 
-    duty_cycle = 0.f;
+    //duty_cycle = 0.f;
 
     TC2->TC_CHANNEL[0].TC_RA = (DUE_MCK2 / 100) / (1 + duty_cycle / 100);
 }

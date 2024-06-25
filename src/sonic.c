@@ -87,7 +87,7 @@ void init_trigger(void)
 
     
     // Register C value after a period where the counter gets reseted on compare
-    // clock MCK/2 ist used; period duration TRIGGER_FREQUENCY/1000  [msec]
+    // clock MCK/2 is used; period duration TRIGGER_FREQUENCY/1000  [msec]
     TC2->TC_CHANNEL[1].TC_RC = DUE_MCK2 / TRIGGER_FREQUENCY;
 
     // waveforming - RB Register clears output after a 20 usec pulse (10 usec is minimum)
