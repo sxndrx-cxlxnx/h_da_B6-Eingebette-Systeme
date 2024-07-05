@@ -30,7 +30,7 @@ const char *sonic_state_text[] = {
 };
 
 // default target is 500mm for the gap between sensor and wall
-uint32_t gap_target = 300;
+uint32_t gap_target = 100;
 
 // default duty cyle is 0%
 float duty_cycle = 0;

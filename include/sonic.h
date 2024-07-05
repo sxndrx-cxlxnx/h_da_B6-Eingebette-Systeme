@@ -9,6 +9,9 @@
 #define _SONIC_H_
 
 #include "constants.h"
+#include "stdbool.h"
+
+extern bool new_sample;
 
 // initialization steps for ultrasonic sensor HC-SR04
 void sonic_init(void);

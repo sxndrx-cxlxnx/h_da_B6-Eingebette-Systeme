@@ -203,7 +203,7 @@ void matrix_loop(void)
     }
     uint8_t distanceView[8] = {0,0,0,0,0,0,0,0};
     int anzahlLampen = 64;
-    int abstandStopp = 0;     // in mm
+    int abstandStopp = gap_target;     // in mm
     
     switch (pic){
         case 23: matrix_progress(distanceView, anzahlLampen / ((progress/1000) - abstandStopp));          //alternativ progress/1000000 50/

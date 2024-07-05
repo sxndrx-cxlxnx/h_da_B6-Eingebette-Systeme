@@ -10,6 +10,8 @@
 #include <sonic.h>
 #include <clock.h>
 
+bool new_sample = false;
+
 // HC-SR04 ultrasonic distance measurement sensor
 // TIOB7 / TRIGGER: generates a trigger signal using timer 7 (TC block 2 channel 1)
 //                  the trigger signal is a pulse with minimum 10usec duration
@@ -58,6 +60,8 @@ __attribute__((interrupt("IRQ"))) void TC8_Handler()
         
         // Reset the counter to be ready for the next measurement
         TC2->TC_CHANNEL[2].TC_CCR = TC_CCR_SWTRG;
+
+        new_sample = true;
     }
 }
 
