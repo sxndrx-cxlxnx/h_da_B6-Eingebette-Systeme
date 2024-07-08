@@ -207,7 +207,6 @@ void matrix_loop(void)
     
     switch (pic){
         case 23: matrix_progress(distanceView, anzahlLampen / ((progress/1000) - abstandStopp));          //alternativ progress/1000000 50/
-                //const uint8_t buffer2 = {buffer};
                 matrix_update(TWI1, distanceView);
                 break;
         case 0:
