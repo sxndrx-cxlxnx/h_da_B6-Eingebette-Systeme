@@ -13,6 +13,8 @@
 #include <math.h>
 #include <sonic.h>
 
+static bool useFirstRegler = false;
+
 void drive_duty(const uint32_t freq, const float duty)
 {
 }
@@ -39,7 +41,7 @@ void drive_init(void)
 
     // Channel Mode Register - set parameters for WAVEFORM trigger signal
 
-    if(gap_target >= 125) {
+    if(useFirstRegler) {
         TC2->TC_CHANNEL[0].TC_CMR =
             TC_CMR_WAVE |               // Waveform mode is enabled.
             TC_CMR_WAVSEL_UP_RC |       // Enable UP mode with automatic trigger on RC compare
@@ -68,7 +70,7 @@ void drive_init(void)
 // loop for regular tasks related to PWM motor drive
 void drive_loop(void)
 {
-    if(gap_target >= 125) {
+    if(useFirstRegler) {
 
         struct sample_t current_sample = sample_series_get(distance_raw, 0);
         struct sample_t older_sample = sample_series_get(distance_raw, 1);
